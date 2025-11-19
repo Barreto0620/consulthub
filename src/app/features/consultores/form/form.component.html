@@ -1,0 +1,84 @@
+<!-- src/app/features/consultores/form/form.component.html -->
+<app-navbar></app-navbar>
+
+<div class="form-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h1>{{ isEditMode ? 'Editar' : 'Novo' }} Consultor</h1>
+      <p>Preencha os dados do consultor</p>
+    </div>
+
+    <form [formGroup]="consultorForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="nomeCompleto">Nome Completo *</label>
+        <input 
+          id="nomeCompleto"
+          type="text" 
+          formControlName="nomeCompleto"
+          placeholder="Digite o nome completo"
+          [class.error]="consultorForm.get('nomeCompleto')?.invalid && consultorForm.get('nomeCompleto')?.touched"
+        >
+        <span class="error-message" *ngIf="consultorForm.get('nomeCompleto')?.invalid && consultorForm.get('nomeCompleto')?.touched">
+          Nome é obrigatório
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          id="email"
+          type="email" 
+          formControlName="email"
+          placeholder="exemplo@email.com"
+          [class.error]="consultorForm.get('email')?.invalid && consultorForm.get('email')?.touched"
+        >
+        <span class="error-message" *ngIf="consultorForm.get('email')?.invalid && consultorForm.get('email')?.touched">
+          Email válido é obrigatório
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="telefone">Telefone *</label>
+        <input 
+          id="telefone"
+          type="tel" 
+          formControlName="telefone"
+          placeholder="(11) 99999-9999"
+          (input)="formatPhoneInput($event)"
+          [class.error]="consultorForm.get('telefone')?.invalid && consultorForm.get('telefone')?.touched"
+        >
+        <span class="error-message" *ngIf="consultorForm.get('telefone')?.invalid && consultorForm.get('telefone')?.touched">
+          Telefone é obrigatório
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="areaEspecializacao">Área de Especialização *</label>
+        <select 
+          id="areaEspecializacao"
+          formControlName="areaEspecializacao"
+          [class.error]="consultorForm.get('areaEspecializacao')?.invalid && consultorForm.get('areaEspecializacao')?.touched"
+        >
+          <option value="">Selecione uma área</option>
+          <option *ngFor="let area of areasEspecializacao" [value]="area">{{ area }}</option>
+        </select>
+        <span class="error-message" *ngIf="consultorForm.get('areaEspecializacao')?.invalid && consultorForm.get('areaEspecializacao')?.touched">
+          Área de especialização é obrigatória
+        </span>
+      </div>
+
+      <div class="error-alert" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="onCancel()" [disabled]="loading">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="consultorForm.invalid || loading">
+          {{ loading ? 'Salvando...' : (isEditMode ? 'Atualizar' : 'Cadastrar') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<app-footer></app-footer>
