@@ -28,16 +28,16 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // Se o usuário já está autenticado, redireciona para consultores
-    if (this.authService.getCurrentUser()) {
-      this.router.navigate(['/consultores']);
-    }
+    this.authService.getCurrentUser().then(user => {
+      if (user) {
+        this.router.navigate(['/consultores']);
+      }
+    });
   }
 
-  async onSubmit() {
-    // Se o formulário estiver inválido, marca todos os campos como "tocados"
-    // para exibir as mensagens de erro no HTML imediatamente.
+  async onSubmit(): Promise<void> {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -52,21 +52,20 @@ export class LoginComponent implements OnInit {
       const result = await this.authService.login(email, password);
       
       if (result.success) {
-        // Redirecionamento bem-sucedido
+        console.log('Login bem-sucedido! Redirecionando...');
         await this.router.navigate(['/consultores']);
       } else {
-        // Mensagem vinda do serviço ou fallback genérico
-        this.errorMessage = result.error || 'Não foi possível realizar o login. Verifique suas credenciais.';
+        this.errorMessage = result.error || 'Email ou senha inválidos. Tente novamente.';
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro crítico no login:', error);
-      this.errorMessage = 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
+      this.errorMessage = error?.message || 'Ocorreu um erro inesperado. Tente novamente.';
     } finally {
       this.loading = false;
     }
   }
 
-  togglePasswordVisibility() {
+  togglePasswordVisibility(): void {
     this.hidePassword = !this.hidePassword;
   }
 }

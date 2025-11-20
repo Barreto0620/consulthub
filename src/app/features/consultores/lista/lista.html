@@ -1,1 +1,96 @@
-<p>lista works!</p>
+<div class="container">
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <div>
+        <h1>ConsultHub</h1>
+        <p class="subtitle">Gestão de Consultores</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-primary" (click)="novoConsultor()">
+          ➕ Novo Consultor
+        </button>
+        <button class="btn-logout" (click)="logout()">
+          🚪 Sair
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Carregando consultores...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage && !loading" class="error-alert">
+    ⚠️ {{ errorMessage }}
+    <button class="btn-retry" (click)="loadConsultores()">Tentar novamente</button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !errorMessage && consultores.length === 0" class="empty-state">
+    <div class="empty-icon">📋</div>
+    <h2>Nenhum consultor cadastrado</h2>
+    <p>Comece adicionando seu primeiro consultor ao sistema</p>
+    <button class="btn-primary" (click)="novoConsultor()">
+      ➕ Cadastrar Primeiro Consultor
+    </button>
+  </div>
+
+  <!-- Consultores List -->
+  <div *ngIf="!loading && !errorMessage && consultores.length > 0" class="consultores-container">
+    <div class="list-header">
+      <h2>Consultores Cadastrados</h2>
+      <span class="count-badge">{{ consultores.length }} {{ consultores.length === 1 ? 'consultor' : 'consultores' }}</span>
+    </div>
+
+    <div class="consultores-grid">
+      <div *ngFor="let consultor of consultores" class="consultor-card">
+        <div class="card-header">
+          <div class="avatar">
+            {{ consultor.nomeCompleto.charAt(0).toUpperCase() }}
+          </div>
+          <div class="card-info">
+            <h3>{{ consultor.nomeCompleto }}</h3>
+            <p class="especialidade">{{ consultor.areaEspecializacao }}</p>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">📧 Email:</span>
+            <span class="value">{{ consultor.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">📱 Telefone:</span>
+            <span class="value">{{ consultor.telefone }}</span>
+          </div>
+          <div class="info-row" *ngIf="consultor.ativo !== undefined">
+            <span class="label">✅ Status:</span>
+            <span class="value" [class.ativo]="consultor.ativo" [class.inativo]="!consultor.ativo">
+              {{ consultor.ativo ? 'Ativo' : 'Inativo' }}
+            </span>
+          </div>
+          <div class="info-row" *ngIf="consultor.dataCadastro">
+            <span class="label">📅 Cadastrado em:</span>
+            <span class="value">{{ consultor.dataCadastro.toDate() | date: 'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn-view" (click)="viewDetails(consultor.id!)" title="Ver detalhes">
+            👁️ Detalhes
+          </button>
+          <button class="btn-edit" (click)="editConsultor(consultor.id!)" title="Editar">
+            ✏️ Editar
+          </button>
+          <button class="btn-delete" (click)="deleteConsultor(consultor.id!, consultor.nomeCompleto)" title="Excluir">
+            🗑️ Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

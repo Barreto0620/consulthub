@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, onAuthStateChanged } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 
 export interface AuthResult {
@@ -48,8 +48,29 @@ export class AuthService {
     await signOut(this.auth);
   }
 
-  getCurrentUser(): User | null {
+  // ✅ CORRIGIDO: Agora é assíncrono
+  async getCurrentUser(): Promise<User | null> {
+    return new Promise((resolve) => {
+      const unsubscribe = onAuthStateChanged(this.auth, (user) => {
+        unsubscribe(); // Cancela o listener após obter o resultado
+        resolve(user);
+      });
+    });
+  }
+
+  // ✅ NOVO: Método síncrono para acesso rápido (opcional)
+  getCurrentUserSync(): User | null {
     return this.auth.currentUser;
+  }
+
+  // ✅ NOVO: Observable para monitorar mudanças no estado de autenticação
+  getAuthState(): Observable<User | null> {
+    return new Observable<User | null>((observer) => {
+      const unsubscribe = onAuthStateChanged(this.auth, (user) => {
+        observer.next(user);
+      });
+      return { unsubscribe };
+    });
   }
 
   private getErrorMessage(error: any): string {
@@ -61,9 +82,13 @@ export class AuthService {
       case 'auth/email-already-in-use':
         return 'Email já cadastrado';
       case 'auth/weak-password':
-        return 'Senha muito fraca';
+        return 'Senha muito fraca (mínimo 6 caracteres)';
       case 'auth/invalid-email':
         return 'Email inválido';
+      case 'auth/invalid-credential':
+        return 'Email ou senha inválidos';
+      case 'auth/too-many-requests':
+        return 'Muitas tentativas. Tente novamente mais tarde.';
       default:
         return 'Erro ao autenticar. Tente novamente.';
     }

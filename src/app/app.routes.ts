@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-// Importe seus componentes aqui
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { Lista } from './features/consultores/lista/lista';

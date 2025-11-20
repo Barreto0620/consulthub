@@ -28,14 +28,15 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    // Se o usuário já está autenticado, redireciona para consultores
-    if (this.authService.getCurrentUser()) {
+  async ngOnInit(): Promise<void> {
+    // ✅ CORRIGIDO: Adiciona await
+    const user = await this.authService.getCurrentUser();
+    if (user) {
       this.router.navigate(['/consultores']);
     }
   }
 
-  async onSubmit() {
+  async onSubmit(): Promise<void> {
     if (this.registerForm.valid) {
       this.loading = true;
       this.errorMessage = '';
@@ -56,7 +57,7 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  togglePasswordVisibility() {
+  togglePasswordVisibility(): void {
     this.hidePassword = !this.hidePassword;
   }
 }
