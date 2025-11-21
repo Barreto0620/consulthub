@@ -1,14 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms'; // ← ADICIONE ISSO
 import { ConsultorService } from '../../../core/services/consultor.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { Consultor } from '../../../core/models/consultor.model'; // ✅ CAMINHO CORRETO
+import { Consultor } from '../../../core/models/consultor.model';
 
 @Component({
   selector: 'app-lista',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule], // ← ADICIONE FormsModule
   templateUrl: './lista.html',
   styleUrls: ['./lista.css']
 })
@@ -18,8 +19,10 @@ export class Lista implements OnInit {
   private router = inject(Router);
 
   consultores: Consultor[] = [];
+  consultoresFiltrados: Consultor[] = []; // ← NOVO
   loading = true;
   errorMessage = '';
+  searchTerm = ''; // ← NOVO
 
   ngOnInit(): void {
     this.loadConsultores();
@@ -32,6 +35,7 @@ export class Lista implements OnInit {
     this.consultorService.getAll().subscribe({
       next: (data) => {
         this.consultores = data;
+        this.consultoresFiltrados = data; // ← NOVO
         this.loading = false;
         console.log('Consultores carregados:', data);
       },
@@ -41,6 +45,29 @@ export class Lista implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  // ← NOVO MÉTODO DE BUSCA
+  onSearch(): void {
+    const term = this.searchTerm.toLowerCase().trim();
+    
+    if (!term) {
+      this.consultoresFiltrados = this.consultores;
+      return;
+    }
+
+    this.consultoresFiltrados = this.consultores.filter(consultor => 
+      consultor.nomeCompleto.toLowerCase().includes(term) ||
+      consultor.email.toLowerCase().includes(term) ||
+      consultor.telefone.toLowerCase().includes(term) ||
+      consultor.areaEspecializacao.toLowerCase().includes(term)
+    );
+  }
+
+  // ← NOVO MÉTODO PARA LIMPAR BUSCA
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.consultoresFiltrados = this.consultores;
   }
 
   viewDetails(id: string): void {
