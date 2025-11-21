@@ -127,12 +127,7 @@ O projeto segue uma arquitetura modular baseada em boas práticas do Angular, di
   - Coleção de consultores
   - Timestamps automáticos
   - Queries em tempo real
-
-#### Configuração Firebase
-- **Project ID**: consulthub-cb5b0
-- **Auth Domain**: consulthub-cb5b0.firebaseapp.com
-- **Storage Bucket**: consulthub-cb5b0.firebasestorage.app
-
+    
 ---
 
 ## 📁 Estrutura do Projeto
@@ -180,8 +175,8 @@ consulthub/
 │   │   │       │
 │   │   │       ├── lista/                     # Lista de consultores
 │   │   │       │   ├── lista.ts
-│   │   │       │   ├── lista.component.html
-│   │   │       │   └── lista.component.css
+│   │   │       │   ├── lista.html
+│   │   │       │   └── lista.css
 │   │   │       │
 │   │   │       ├── form/                      # Formulário (criar/editar)
 │   │   │       │   ├── form.component.ts
@@ -403,38 +398,6 @@ ng build --watch --configuration development
 
 ---
 
-## 🌐 Deploy
-
-### Vercel
-
-O projeto está configurado para deploy automático na Vercel:
-
-```bash
-npm run build:prod
-# ou
-npm run vercel-build
-```
-
-O script `vercel-build` está configurado no `package.json` e executa automaticamente o build de produção.
-
-**Configurações de Deploy:**
-- Build Command: `npm run vercel-build`
-- Output Directory: `dist/consulthub/browser`
-- Node Version: 18.x
-
-### Firebase Hosting (Alternativa)
-
-Para deploy no Firebase Hosting:
-
-```bash
-npm install -g firebase-tools
-firebase login
-firebase init hosting
-firebase deploy
-```
-
----
-
 ## 📜 Scripts Disponíveis
 
 | Script | Comando | Descrição |
@@ -511,16 +474,5 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 
 ## 👨‍💻 Autor
 
-**ConsultHub Team**
-
----
-
-## 📞 Suporte
-
-Para suporte, envie um email para contato@consulthub.com ou abra uma issue no GitHub.
-
----
-
-<div align="center">
-  Desenvolvido com ❤️ usando Angular e Firebase
-</div>
+Gabriel Barreto
+Lusxka
