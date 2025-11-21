@@ -10,7 +10,7 @@ import { Consultor } from '../../../core/models/consultor.model';
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NavbarComponent, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })

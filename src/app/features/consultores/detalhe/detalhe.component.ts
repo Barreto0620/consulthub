@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-detalhe',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent, LoadingComponent],
+  imports: [CommonModule],
   templateUrl: './detalhe.component.html',
   styleUrls: ['./detalhe.component.css']
 })
